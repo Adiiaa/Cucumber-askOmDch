@@ -6,6 +6,4 @@ Feature: Login Functionality
   Scenario: Login successful
     Given I am on the AskOmDch account page
     When I enter valid credentials
-    |username|password|
-    |Testing Web|testing@12|
     Then I should be on dashboard page
