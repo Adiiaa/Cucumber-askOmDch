@@ -19,11 +19,7 @@ public class LoginSteps{
         this.driver = hook.driver;
     }
 
-    @Given("I am on the AskOmDch account page")
-    public void i_am_on_the_ask_om_dch_account_page() {
 
-        driver.get("https://askomdch.com/");
-    }
     @When("I enter valid credentials")
     public void i_enter_valid_credentials() {
         driver.findElement(By.linkText("Account")).click();

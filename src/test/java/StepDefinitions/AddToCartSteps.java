@@ -14,12 +14,7 @@ public class AddToCartSteps {
         this.driver = hook.driver;
     }
 
-    @Given("I am on the store page")
-    public void i_am_on_the_store_page() {
 
-        driver.get("https://askomdch.com/");
-
-    }
     @When("I click add to product button on the product")
     public void i_click_add_to_product_button_on_the_product() {
         driver.findElement(By.linkText("Store")).click();
