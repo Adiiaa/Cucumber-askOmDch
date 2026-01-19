@@ -10,7 +10,8 @@ import org.junit.runner.RunWith;
         features = "src/test/resources",
         glue = {"StepDefinitions","Hooks"},
         plugin = {"pretty"},
-        monochrome = true
+        monochrome = true,
+        tags = "@invalidCheckout"
 )
 
 

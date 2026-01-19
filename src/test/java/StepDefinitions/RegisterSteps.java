@@ -1,36 +1,55 @@
 package StepDefinitions;
 
-import Hooks.Hook;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.junit.Assert;
+import pages.AccountPage;
 
-import java.time.Duration;
+import java.util.Map;
 
 import static org.junit.Assert.assertTrue;
 
 public class RegisterSteps {
-    private WebDriver driver;
-    private WebDriverWait wait;
 
-    public RegisterSteps(Hook hook){
-        this.driver = hook.driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    private final AccountPage accountPage = new AccountPage();
+
+    @When("the user fills the registration form with:")
+    public void the_user_fills_the_registration_form_with(DataTable dataTable) {
+        Map<String, String> data = dataTable.asMaps(String.class, String.class).get(0);
+        accountPage.open();
+        accountPage.fillRegister(data.get("username"), data.get("email"), data.get("password"));
     }
 
-    @When("I register with valid credentials")
-    public void i_register_with_valid_credentials() {
-        driver.findElement(By.linkText("Account")).click();
-        driver.findElement(By.id("reg_username")).sendKeys("example3");
-        driver.findElement(By.id("reg_email")).sendKeys("example@test3.com");
-        driver.findElement(By.id("reg_password")).sendKeys("example@test3");
-        driver.findElement(By.name("register")).click();
-
+    @When("the user submits the registration form")
+    public void the_user_submits_the_registration_form() {
+        accountPage.submitRegister();
     }
-    @Then("My account should be created successfully")
-    public void my_account_should_be_created_successfully() {
-        assertTrue(driver.findElement(By.linkText("Logout")).isDisplayed());
+
+    @Then("the account should be created successfully")
+    public void the_account_should_be_created_successfully() {
+        assertTrue(accountPage.isLoggedIn());
+    }
+    @When("the user enters username {string}")
+    public void the_user_enters_username(String username) {
+        accountPage.typeRegisterUsername(username);
+    }
+
+    @When("the user enters email {string}")
+    public void the_user_enters_email(String email) {
+        accountPage.typeRegisterEmail(email);
+    }
+
+    @When("the user enters password {string}")
+    public void the_user_enters_password(String password) {
+        accountPage.typeRegisterPassword(password);
+    }
+
+
+    @Then("the user should see an error message {string}")
+    public void the_user_should_see_an_error_message(String errorMessage) {
+        String actualMessage = accountPage.getRegisterError();
+        Assert.assertTrue("Expected error not found. Got: " + actualMessage,
+                actualMessage.toLowerCase().contains(errorMessage.toLowerCase()));
     }
 }
