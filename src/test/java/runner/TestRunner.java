@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
         glue = {"StepDefinitions","Hooks"},
         plugin = {"pretty"},
         monochrome = true,
-        tags = "@invalidCheckout"
+        tags = "@cart"
 )
 
 

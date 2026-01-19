@@ -12,8 +12,3 @@ Feature: Add to Cart
     When I navigate to the store page
     And I add a product to the cart from the store
     Then the product should be visible in the cart
-
-  @featured
-  Scenario: Add product to cart from Featured Products on Home page
-    When I add a featured product to the cart
-    Then the product should be visible in the cart

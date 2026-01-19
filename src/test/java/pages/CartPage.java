@@ -1,22 +1,30 @@
 package pages;
 
+import Factory.DriverFactory;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class CartPage extends BasePage {
+import java.time.Duration;
 
-    @FindBy(css = ".cart_item .product-name a")
-    private WebElement cartProductName;
+public class CartPage {
+
+    private WebDriver driver;
+    private WebDriverWait wait;
 
     @FindBy(css = ".checkout-button")
-    private WebElement proceedToCheckoutButton;
+    private WebElement checkoutBtn;
 
-
-    public String getCartProductName() {
-        return getTextWhenVisible(cartProductName);
+    public CartPage() {
+        driver = DriverFactory.getDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        PageFactory.initElements(driver, this);
     }
 
-    public void clickProceedToCheckout() {
-        clickWhenClickable(proceedToCheckoutButton);
+    public void proceedToCheckout() {
+        wait.until(ExpectedConditions.elementToBeClickable(checkoutBtn)).click();
     }
 }

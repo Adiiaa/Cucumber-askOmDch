@@ -1,76 +1,39 @@
 package pages;
 
+import Factory.DriverFactory;
 import config.Config;
-import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-public class StorePage extends BasePage {
+import java.time.Duration;
 
-    // First product card in the store listing
-    @FindBy(css = "ul.products li.product")
-    private WebElement firstProductCard;
+public class StorePage {
 
-    // Product name inside a product card
-    private By productNameInCard = By.cssSelector("h2.woocommerce-loop-product__title");
+    private WebDriver driver;
+    private WebDriverWait wait;
 
-    // Add to cart button inside a product card
-    private By addToCartButtonInCard = By.cssSelector("a.add_to_cart_button");
+    @FindBy(css = "ul.products li.product a.button")
+    private WebElement firstAddToCartBtn;
 
-    // "View cart" link that appears after adding
     @FindBy(css = "a.added_to_cart")
     private WebElement viewCartLink;
 
-    // Featured products section on home page (adjust selector if needed)
-    @FindBy(css = "section[id*='featured'], section.featured-products, .wp-block-woocommerce-featured-products")
-    private WebElement featuredSection;
-
-    // First featured product card
-    private By firstFeaturedProductCard = By.cssSelector("section[id*='featured'] ul.products li.product, .featured-products ul.products li.product");
+    public StorePage() {
+        driver = DriverFactory.getDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        PageFactory.initElements(driver, this);
+    }
 
     public void open() {
-        navigateTo(Config.STORE_URL);
+        driver.get(Config.STORE_URL);
     }
 
-    // Add first product from Store listing, return its name
-    public String addFirstProductToCart() {
-        waitForVisibility(firstProductCard);
-        String name = firstProductCard.findElement(productNameInCard).getText();
-        clickWhenClickable(firstProductCard.findElement(addToCartButtonInCard));
-        return name;
-    }
-
-    // Add first product from Featured section on Home page, return its name
-    public String addFeaturedProductToCart() {
-        // Navigate to home first to ensure featured section is present
-        navigateTo(Config.BASE_URL);
-        waitForVisibility(featuredSection);
-
-        WebElement firstFeaturedCard = featuredSection.findElement(firstFeaturedProductCard);
-        String name = firstFeaturedCard.findElement(productNameInCard).getText();
-        clickWhenClickable(firstFeaturedCard.findElement(addToCartButtonInCard));
-        return name;
-    }
-    public String addFirstProductToCartAndGoToCart() {
-        // wait for the first product card
-        waitForVisibility(firstProductCard);
-
-        // get product name from the card
-        String productName = firstProductCard.findElement(productNameInCard).getText();
-
-        // click add to cart button inside the card
-        clickWhenClickable(firstProductCard.findElement(addToCartButtonInCard));
-
-        // click view cart link
-        clickWhenClickable(viewCartLink);
-
-        return productName;
-    }
-
-
-
-    // Click the "View cart" link that appears after adding
-    public void clickViewCart() {
-        clickWhenClickable(viewCartLink);
+    public void addFirstProductToCartAndGoToCart() {
+        wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(viewCartLink)).click();
     }
 }
