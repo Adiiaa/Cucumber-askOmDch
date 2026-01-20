@@ -30,7 +30,7 @@ public class AddToCartSteps {
 
     @Then("the product should be visible in the cart")
     public void the_product_should_be_visible_in_the_cart() {
-        cartPage.open(); // navigate explicitly
+        cartPage.open();
 
         String cartProductName = cartPage.getCartProductName();
 

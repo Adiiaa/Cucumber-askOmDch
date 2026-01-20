@@ -23,7 +23,7 @@ public class CartPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(Constants.DEFAULT_TIMEOUT_SECONDS));
     }
 
-    // Navigate to cart and wait for products to appear
+
     public void open() {
         driver.get("https://askomdch.com/cart");
         wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(productNameCells));
