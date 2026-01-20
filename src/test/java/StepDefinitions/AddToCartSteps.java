@@ -11,6 +11,7 @@ public class AddToCartSteps {
 
     private final StorePage storePage = new StorePage();
     private final CartPage cartPage = new CartPage();
+    private String selectedProductName;
 
     @Given("I am on the home page")
     public void i_am_on_the_home_page() {
@@ -24,14 +25,16 @@ public class AddToCartSteps {
 
     @When("I add a product to the cart from the store")
     public void i_add_a_product_to_the_cart_from_the_store() {
-        storePage.addFirstProductToCartAndGoToCart();
+        selectedProductName = storePage.addFirstProductToCart();
     }
 
     @Then("the product should be visible in the cart")
     public void the_product_should_be_visible_in_the_cart() {
+        String cartProductName = cartPage.getCartProductName();
+
         Assert.assertTrue(
-                "Cart page not loaded",
-                DriverFactory.getDriver().getCurrentUrl().contains("cart")
+                "Expected product not found in cart",
+                cartProductName.contains(selectedProductName)
         );
     }
 }

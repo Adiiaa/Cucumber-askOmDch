@@ -1,39 +1,67 @@
 package pages;
 
 import Factory.DriverFactory;
-import config.Config;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.*;
+import util.Constants;
 
 import java.time.Duration;
+import java.util.List;
 
 public class StorePage {
 
     private WebDriver driver;
     private WebDriverWait wait;
 
-    @FindBy(css = "ul.products li.product a.button")
+    // ---------- Category ----------
+    @FindBy(id = "product_cat")
+    private WebElement categoryDropdown;
+
+    @FindBy(css = "ul.products li.product")
+    private List<WebElement> products;
+
+    // ---------- Add to cart ----------
+    @FindBy(css = "ul.products li.product a.add_to_cart_button")
     private WebElement firstAddToCartBtn;
 
-    @FindBy(css = "a.added_to_cart")
+    @FindBy(css = "a.wc-forward")
     private WebElement viewCartLink;
 
     public StorePage() {
-        driver = DriverFactory.getDriver();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.driver = DriverFactory.getDriver();
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(Constants.DEFAULT_TIMEOUT_SECONDS));
         PageFactory.initElements(driver, this);
     }
 
     public void open() {
-        driver.get(Config.STORE_URL);
+        driver.get("https://askomdch.com/store");
+        wait.until(ExpectedConditions.visibilityOf(categoryDropdown));
     }
 
-    public void addFirstProductToCartAndGoToCart() {
+    // ✅ USED BY ADD TO CART FEATURE
+    public String addFirstProductToCart() {
+        String productName =
+                firstAddToCartBtn.getAttribute("data-product_title");
+
         wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartBtn)).click();
-        wait.until(ExpectedConditions.elementToBeClickable(viewCartLink)).click();
+        wait.until(ExpectedConditions.visibilityOf(viewCartLink)).click();
+
+        return productName;
+    }
+
+    // ✅ USED BY CHECKOUT FEATURE ONLY
+    public void addFirstProductToCartAndOpenCart() {
+        wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartBtn)).click();
+        wait.until(ExpectedConditions.visibilityOf(viewCartLink)).click();
+    }
+
+    // ---------- Browse by category (UNCHANGED) ----------
+    public void selectCategory(String value) {
+        new Select(categoryDropdown).selectByValue(value);
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+                By.cssSelector("ul.products li.product")
+        ));
     }
 }

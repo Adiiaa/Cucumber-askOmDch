@@ -6,8 +6,7 @@ Feature: Checkout functionality
 
   Background:
     Given I am on the store page
-    And I add a product to the cart
-    And I navigate to the cart page
+    And I add a product to the cart for checkout
     And I proceed to checkout
 
   @validCheckout
