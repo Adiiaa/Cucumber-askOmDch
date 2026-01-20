@@ -28,8 +28,10 @@ public class RegisterSteps {
 
     @Then("the account should be created successfully")
     public void the_account_should_be_created_successfully() {
-        assertTrue(accountPage.isLoggedIn());
+        Assert.assertTrue("User was not logged in after registration",
+                accountPage.isLoggedIn());
     }
+
     @When("the user enters username {string}")
     public void the_user_enters_username(String username) {
         accountPage.typeRegisterUsername(username);

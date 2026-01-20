@@ -3,41 +3,35 @@ package pages;
 import config.Config;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class AccountPage extends BasePage {
 
-    @FindBy(linkText = "Account")
-    private WebElement accountLink;
+    @FindBy(linkText = "Account") private WebElement accountLink;
 
     // --- Login Form ---
-    @FindBy(id = "username")
-    private WebElement loginUsername;
+    @FindBy(id = "username") private WebElement loginUsername;
 
-    @FindBy(id = "password")
-    private WebElement loginPassword;
+    @FindBy(id = "password") private WebElement loginPassword;
 
-    @FindBy(name = "login")
-    private WebElement loginButton;
+    @FindBy(name = "login") private WebElement loginButton;
 
-    @FindBy(linkText = "Logout")
-    private WebElement logoutLink;
+    @FindBy(linkText = "Logout") private WebElement logoutLink;
 
     // --- Register Form ---
-    @FindBy(id = "reg_username")
-    private WebElement regUsername;
+    @FindBy(id = "reg_username") private WebElement regUsername;
 
-    @FindBy(id = "reg_email")
-    private WebElement regEmail;
+    @FindBy(id = "reg_email") private WebElement regEmail;
 
-    @FindBy(id = "reg_password")
-    private WebElement regPassword;
+    @FindBy(id = "reg_password") private WebElement regPassword;
 
-    @FindBy(name = "register")
-    private WebElement registerButton;
+    @FindBy(name = "register") private WebElement registerButton;
 
     // --- Error container (shared WooCommerce) ---
-    @FindBy(css = ".woocommerce-error")
-    private WebElement errorContainer;
+    @FindBy(css = ".woocommerce-error") private WebElement errorContainer;
 
     // --- Navigation ---
     public void open() {
@@ -70,7 +64,13 @@ public class AccountPage extends BasePage {
     }
 
     public boolean isLoggedIn() {
-        return logoutLink.isDisplayed();
+        try {
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+            wait.until(ExpectedConditions.visibilityOf(logoutLink));
+            return logoutLink.isDisplayed();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public String getLoginError() {
