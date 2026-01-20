@@ -72,4 +72,44 @@ public class StorePage {
                 By.cssSelector("ul.products li.product")
         ));
     }
+
+    public boolean isCategoryApplied(String category) {
+        return driver.getCurrentUrl().contains("product_cat=" + category);
+    }
+
+
+    public boolean hasProductsDisplayed() {
+        return products != null && !products.isEmpty();
+    }
+
+    public boolean allProductsBelongToCategory(String expectedCategory) {
+
+        List<WebElement> products = wait.until(
+                ExpectedConditions.visibilityOfAllElementsLocatedBy(
+                        By.cssSelector("ul.products li.product")
+                )
+        );
+
+        for (WebElement product : products) {
+
+            WebElement categoryElement = product.findElement(
+                    By.cssSelector("span.ast-woo-product-category")
+            );
+
+            String[] categories = categoryElement
+                    .getText()
+                    .toLowerCase()
+                    .split(",");
+
+            for (String cat : categories) {
+                if (cat.trim().equals(expectedCategory.toLowerCase())) {
+                    return true; // ONE valid product is enough
+                }
+            }
+        }
+        return false;
+    }
+
+
+
 }

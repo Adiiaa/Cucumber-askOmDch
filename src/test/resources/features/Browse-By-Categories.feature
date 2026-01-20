@@ -1,6 +1,6 @@
 @browseCategory
 Feature: Browse by categories on the store page
-  As a shopper
+  As a customer
   I want to filter products by category
   So that I only see items from the selected category
 
