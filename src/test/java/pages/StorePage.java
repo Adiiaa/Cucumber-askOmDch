@@ -40,18 +40,28 @@ public class StorePage {
         wait.until(ExpectedConditions.visibilityOf(categoryDropdown));
     }
 
-    // ✅ USED BY ADD TO CART FEATURE
-    public String addFirstProductToCart() {
-        String productName =
-                firstAddToCartBtn.getAttribute("data-product_title");
 
-        wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartBtn)).click();
-        wait.until(ExpectedConditions.visibilityOf(viewCartLink)).click();
+    public String addFirstProductToCart() {
+        // locate the first product container
+        WebElement firstProduct = driver.findElement(By.cssSelector("ul.products li.product"));
+
+        // get the product name from the <h2>
+        WebElement firstProductTitle = firstProduct.findElement(By.cssSelector("h2.woocommerce-loop-product__title"));
+        String productName = firstProductTitle.getText();
+
+        if (productName == null || productName.isEmpty()) {
+            throw new RuntimeException("Product title not found!");
+        }
+
+        // click the add to cart button inside the same product container
+        WebElement addToCartBtn = firstProduct.findElement(By.cssSelector("a.add_to_cart_button"));
+        wait.until(ExpectedConditions.elementToBeClickable(addToCartBtn)).click();
 
         return productName;
     }
 
-    // ✅ USED BY CHECKOUT FEATURE ONLY
+
+
     public void addFirstProductToCartAndOpenCart() {
         wait.until(ExpectedConditions.elementToBeClickable(firstAddToCartBtn)).click();
         wait.until(ExpectedConditions.visibilityOf(viewCartLink)).click();
